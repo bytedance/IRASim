@@ -22,10 +22,14 @@ Scalable robot learning in the real world is limited by the cost and safety issu
 
 <div style="text-align: center;">
   <video width="960" height="540" controls>
-    <source src="assets/videos/video_results.mp4" type="video/mp4">
+    <source src="[assets/videos/video_results.mp4](https://github.com/bytedance/IRASim/assets/171647508/cee55e22-d32c-401b-8a81-196b94233aeb)" type="video/mp4">
     Your browser does not support the video tag.
   </video>
 </div>
+
+
+
+
 
 ## Installation
 
