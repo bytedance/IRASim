@@ -122,8 +122,8 @@ def main(args):
 
     train_dataset,val_dataset = get_dataset(args)
 
-    left_scale,right_scale = 0.75,-0.75
-    up_scale, down_scale = 0.75, -0.75
+    left_scale,right_scale = 0.5,-0.5
+    up_scale, down_scale = 0.5, -0.5
 
     ann_file = val_dataset.ann_files[0]
 
