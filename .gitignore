@@ -1,0 +1,10 @@
+*__pycache__*
+*.pyc
+*.git
+*.vscode
+*.log
+*.mp4
+pretrained_models/stabilityai
+results
+wandb
+videos

@@ -1,0 +1,38 @@
+dataset: "bridge"
+sequence_interval: 1
+val_start_frame_interval: 16
+cam_ids: [0]
+accumulate_action: False
+pre_encode : True
+normalize: True
+mode: 'test'
+
+anno: 'test_bridge_video_ada'
+debug: True
+do_evaluate: True
+
+evaluate_checkpoint: 'bridge/checkpoints/video_ada/0300000.pt'
+
+# model config: 
+model: IRASim-XL/2
+num_frames: 16
+video_size: [256,320]
+learn_sigma: False
+extras: 5 # [3, 5] 3 frame-level condition 5 video-level condition
+mask_frame_num: 1
+
+learning_rate: 1e-4
+ckpt_every: 10000
+clip_max_norm: 0.1
+start_clip_iter: 0
+local_batch_size: 1 
+local_val_batch_size: 32
+max_train_steps: 300000
+global_seed: 3407
+num_workers: 11
+log_every: 100
+val_every: 10000
+gradient_accumulation_steps: 1
+attention_mode: 'math'
+
+resume_from_checkpoint : False

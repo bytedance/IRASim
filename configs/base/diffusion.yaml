@@ -1,0 +1,7 @@
+sample_method: 'PNDM'
+beta_start: 0.0001
+beta_end: 0.02
+beta_schedule: "linear"
+variance_type: "learned_range"
+infer_num_sampling_steps: 50
+guidance_scale: 1.0

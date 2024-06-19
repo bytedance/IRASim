@@ -1,0 +1,6 @@
+dataset_dir: "robotdata/opensource_robotdata" 
+project_dir: 'IRASim'
+vae_model_path: 'pretrained_models/stabilityai/stable-diffusion-xl-base-1.0'
+scheduler_path: 'pretrained_models/scheduler'
+results_dir: "results"
+annotation_name: 'annotation' # annotation dirname under dataset_dir path
