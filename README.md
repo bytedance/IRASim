@@ -27,9 +27,6 @@ Scalable robot learning in the real world is limited by the cost and safety issu
   </video>
 </div>
 
-
-Here is a polished version of your readme:
-
 ## 🛠️ Installation
 
 To set up the environment, run the following command:
