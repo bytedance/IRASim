@@ -36,7 +36,7 @@ bash scripts/install.sh
 
 ## Dataset
 
-The complete dataset structure can be found in `dataset_structure.txt`.
+The complete dataset structure can be found in [dataset_structure.txt](https://github.com/bytedance/IRASim/blob/main/dataset_structure.txt).
 
 ## Language Table Application
 
