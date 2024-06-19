@@ -1,10 +1,10 @@
 <h1 align="center">IRASim: Learning Interactive Real-Robot Action Simulators</h1>
 
 [[Project page]](https://gen-irasim.github.io/)
-[[Paper]](https://diffusion-policy.cs.columbia.edu/#paper)
+[[Paper]](https://gen-irasim.github.io/)
 
 [Fangqi Zhu](https://fangqi-zhu.github.io/)<sup>1,2</sup>,
-[Hongtao Wu](https://scholar.google.com/citations?user=7u0TYgIAAAAJ&hl=zh-CN&oi=ao)<sup>1*&dagger;</sup>,
+[Hongtao Wu](https://scholar.google.com/citations?user=7u0TYgIAAAAJ&hl=zh-CN&oi=ao)<sup>1&dagger*;</sup>,
 [Song Guo](https://cse.hkust.edu.hk/~songguo/)<sup>2*</sup>,
 [Yuxiao Liu](https://scholar.google.com/citations?hl=zh-CN&user=i8wNtSgAAAAJ)<sup>1</sup>,
 [Chilam Cheang](Gen-IRASim.github.io)<sup>1</sup>,
@@ -18,7 +18,7 @@
 
 https://github.com/bytedance/IRASim/assets/171647508/866aa3e6-dc85-4053-a72f-f5ae7878f09d
 
-Scalable robot learning in the real world is limited by the cost and safety issues of real robots. In addition, rolling out robot trajectories in the real world can be time-consuming and labor-intensive. In this paper, we propose to learn an interactive real-robot action simulator as an alternative. We introduce a novel method, IRASim, which leverages the power of generative models to generate extremely realistic videos of a robot arm that executes a given action trajectory, starting from an initial given frame. To validate the effectiveness of our method, we create a new benchmark, IRASim Benchmark, based on three real-robot datasets and perform extensive experiments on the benchmark. Results show that IRASim outperforms all the baseline methods and is more preferable in human evaluations. We hope that IRASim can serve as an effective and scalable approach to enhance robot learning in the real world. To promote research for generative real-robot action simulators, we open-source everything: code, benchmark and checkpoints.
+Scalable robot learning in the real world is limited by the cost and safety issues of real robots. In addition, rolling out robot trajectories in the real world can be time-consuming and labor-intensive. In this paper, we propose to learn an interactive real-robot action simulator as an alternative. We introduce a novel method, IRASim, which leverages the power of generative models to generate extremely realistic videos of a robot arm that executes a given action trajectory, starting from an initial given frame. To validate the effectiveness of our method, we create a new benchmark, IRASim Benchmark, based on three real-robot datasets and perform extensive experiments on the benchmark. Results show that IRASim outperforms all the baseline methods and is more preferable in human evaluations. We hope that IRASim can serve as an effective and scalable approach to enhance robot learning in the real world. To promote research for generative real-robot action simulators, we open-source code, benchmark , and checkpoints.
 
 <img src="assets/images/intro.png" alt="introduction" width="100%"/>
 
