@@ -4,7 +4,7 @@
 [[Paper]](https://gen-irasim.github.io/)
 
 [Fangqi Zhu](https://fangqi-zhu.github.io/)<sup>1,2</sup>,
-[Hongtao Wu](https://scholar.google.com/citations?user=7u0TYgIAAAAJ&hl=zh-CN&oi=ao)<sup>1&dagger*;</sup>,
+[Hongtao Wu](https://scholar.google.com/citations?user=7u0TYgIAAAAJ&hl=zh-CN&oi=ao)<sup>1&dagger;*</sup>,
 [Song Guo](https://cse.hkust.edu.hk/~songguo/)<sup>2*</sup>,
 [Yuxiao Liu](https://scholar.google.com/citations?hl=zh-CN&user=i8wNtSgAAAAJ)<sup>1</sup>,
 [Chilam Cheang](Gen-IRASim.github.io)<sup>1</sup>,
