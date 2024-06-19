@@ -70,12 +70,11 @@ Below are example scripts for evaluating the IRASim-Frame-Ada model on the RT-1 
 
 To quantitatively evaluate the model in the short trajectory setting, we first need to generate all evaluation videos.
 
-Generate evaluation videos
+Generate evaluation videos:
 ```bash
 torchrun --nproc_per_node 8 --nnodes 1 --node_rank 0 --rdzv_endpoint {node_address}:{port} --rdzv_id 107 --rdzv_backend c10d main.py --config configs/evaluation/rt1/frame_ada.yaml
 ```
 
-Calculate metrics of generated short videos
 We provide an automated script to calculate the metrics of the generated short videos:
 ```bash
 python3 evaluate/evaluation_short_script.py
