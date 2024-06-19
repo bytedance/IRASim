@@ -114,7 +114,7 @@ If you find this code useful in your work, please consider citing
 ## 🏷️ License
 This project is licensed under the [Apache-2.0 License](LICENSE.txt).
 
-## 🙏 Acknowledgement
+## Acknowledgement
 * Our implementation is largely adapted from [Latte](https://github.com/Vchitect/Latte).
 * Our FVD implementation is adapted from [stylegan-v](https://github.com/universome/stylegan-v).
 * Our FID implementation is adapted from [pytorch-fid](https://github.com/mseitzer/pytorch-fid).
