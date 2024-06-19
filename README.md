@@ -27,7 +27,7 @@ Scalable robot learning in the real world is limited by the cost and safety issu
   </video>
 </div>
 
-## 🛠️ Installation
+## Installation
 
 To set up the environment, run the following command:
 ```bash
@@ -70,12 +70,12 @@ Below are example scripts for evaluating the IRASim-Frame-Ada model on the RT-1 
 
 To quantitatively evaluate the model in the short trajectory setting, we first need to generate all evaluation videos.
 
-#### Generate Evaluation Videos
+Generate evaluation videos
 ```bash
 torchrun --nproc_per_node 8 --nnodes 1 --node_rank 0 --rdzv_endpoint {node_address}:{port} --rdzv_id 107 --rdzv_backend c10d main.py --config configs/evaluation/rt1/frame_ada.yaml
 ```
 
-#### Calculate Metrics of Generated Short Videos
+Calculate metrics of generated short videos
 We provide an automated script to calculate the metrics of the generated short videos:
 ```bash
 python3 evaluate/evaluation_short_script.py
