@@ -31,6 +31,19 @@ bash scripts/install.sh
 
 ## Dataset
 
+To download the complete dataset, run:
+```
+bash scripts/download.sh
+```
+
+This table lists the download links and file sizes for the RT-1, Bridge, and Language-Table datasets, categorized into train, evaluation, and checkpoints data.
+
+| Category        | Train                                                                                              | Size  | Evaluation                                                             | Size  | Checkpoints                                                            | Size  |
+|:----------------|:---------------------------------------------------------------------------------------------------|:------|:----------------------------------------------------------------------|:------|:-----------------------------------------------------------------------|:------|
+| **rt-1**        | [rt1_train_data.tar.gz](https://lf-robot-opensource.bytetos.com/obj/lab-robot-public/opensource_IRASim_v1/rt1_train_data.tar.gz)                       | 86G   | [rt1_evaluation_data.tar.gz](https://lf-robot-opensource.bytetos.com/obj/lab-robot-public/opensource_IRASim_v1/rt1_evaluation_data.tar.gz)             | 100G  | [rt1_checkpoints_data.tar.gz](https://lf-robot-opensource.bytetos.com/obj/lab-robot-public/opensource_IRASim_v1/rt1_checkpoints_data.tar.gz)           | 29G   |
+| **bridge**      | [bridge_train_data.tar.gz](https://lf-robot-opensource.bytetos.com/obj/lab-robot-public/opensource_IRASim_v1/bridge_train_data.tar.gz)                 | 31G   | [bridge_evaluation_data.tar.gz](https://lf-robot-opensource.bytetos.com/obj/lab-robot-public/opensource_IRASim_v1/bridge_evaluation_data.tar.gz)       | 63G   | [bridge_checkpoints_data.tar.gz](https://lf-robot-opensource.bytetos.com/obj/lab-robot-public/opensource_IRASim_v1/bridge_checkpoints_data.tar.gz)     | 32G   |
+| **language-table** | [languagetable_train_data.tar.gz](https://lf-robot-opensource.bytetos.com/obj/lab-robot-public/opensource_IRASim_v1/languagetable_train_data.tar.gz)  | 200G  | [languagetable_evaluation_data.tar.gz](https://lf-robot-opensource.bytetos.com/obj/lab-robot-public/opensource_IRASim_v1/languagetable_evaluation_data.tar.gz) | 194G  | [languagetable_checkpoints_data.tar.gz](https://lf-robot-opensource.bytetos.com/obj/lab-robot-public/opensource_IRASim_v1/languagetable_checkpoints_data.tar.gz) | 34G   |
+
 The complete dataset structure can be found in [dataset_structure.txt](https://github.com/bytedance/IRASim/blob/main/dataset_structure.txt).
 
 ## Language Table Application
@@ -109,3 +122,5 @@ If you find this code useful in your work, please consider citing
 * Our implementation is largely adapted from [Latte](https://github.com/Vchitect/Latte).
 * Our FVD implementation is adapted from [stylegan-v](https://github.com/universome/stylegan-v).
 * Our FID implementation is adapted from [pytorch-fid](https://github.com/mseitzer/pytorch-fid).
+* Our RT-1, Bridge, Language-Table datasets are adapted from [open_x_embodiment
+](https://github.com/google-deepmind/open_x_embodiment)
