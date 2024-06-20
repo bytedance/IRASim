@@ -123,4 +123,4 @@ If you find this code useful in your work, please consider citing
 * Our FVD implementation is adapted from [stylegan-v](https://github.com/universome/stylegan-v).
 * Our FID implementation is adapted from [pytorch-fid](https://github.com/mseitzer/pytorch-fid).
 * Our RT-1, Bridge, Language-Table datasets are adapted from [open_x_embodiment
-](https://github.com/google-deepmind/open_x_embodiment)
+](https://github.com/google-deepmind/open_x_embodiment).
