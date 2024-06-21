@@ -1,7 +1,7 @@
 <h1 align="center">IRASim: Learning Interactive Real-Robot Action Simulators</h1>
 
 [[Project page]](https://gen-irasim.github.io/)
-[[Paper]](https://gen-irasim.github.io/)
+[[Paper]](https://arxiv.org/pdf/2406.14540)
 
 [Fangqi Zhu](https://fangqi-zhu.github.io/)<sup>1,2</sup>,
 [Hongtao Wu](https://scholar.google.com/citations?user=7u0TYgIAAAAJ&hl=zh-CN&oi=ao)<sup>1&dagger;*</sup>,
@@ -122,5 +122,5 @@ If you find this code useful in your work, please consider citing
 * Our implementation is largely adapted from [Latte](https://github.com/Vchitect/Latte).
 * Our FVD implementation is adapted from [stylegan-v](https://github.com/universome/stylegan-v).
 * Our FID implementation is adapted from [pytorch-fid](https://github.com/mseitzer/pytorch-fid).
-* Our RT-1, Bridge, Language-Table datasets are adapted from [open_x_embodiment
+* Our RT-1, Bridge, Language-Table datasets are adapted from [RT-1](https://robotics-transformer1.github.io/) [Bridge](https://rail-berkeley.github.io/bridgedata/), [open_x_embodiment
 ](https://github.com/google-deepmind/open_x_embodiment).
