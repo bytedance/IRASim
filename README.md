@@ -122,5 +122,5 @@ If you find this code useful in your work, please consider citing
 * Our implementation is largely adapted from [Latte](https://github.com/Vchitect/Latte).
 * Our FVD implementation is adapted from [stylegan-v](https://github.com/universome/stylegan-v).
 * Our FID implementation is adapted from [pytorch-fid](https://github.com/mseitzer/pytorch-fid).
-* Our RT-1, Bridge, Language-Table datasets are adapted from [RT-1](https://robotics-transformer1.github.io/) [Bridge](https://rail-berkeley.github.io/bridgedata/), [open_x_embodiment
+* Our RT-1, Bridge, Language-Table datasets are adapted from [RT-1](https://robotics-transformer1.github.io/), [Bridge](https://rail-berkeley.github.io/bridgedata/), [open_x_embodiment
 ](https://github.com/google-deepmind/open_x_embodiment).
