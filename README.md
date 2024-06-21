@@ -114,7 +114,7 @@ If you find this code useful in your work, please consider citing
   title={IRASim: Learning Interactive Real-Robot Action Simulators},
   author={Fangqi Zhu and Hongtao Wu and Song Guo and Yuxiao Liu and Chilam Cheang and Tao Kong},
   year={2024},
-  journal={arXiv:xxxx.xxxxx}
+  journal={arXiv:2406.12802}
 }
 ```
 
