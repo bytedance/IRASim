@@ -124,3 +124,12 @@ If you find this code useful in your work, please consider citing
 * Our FID implementation is adapted from [pytorch-fid](https://github.com/mseitzer/pytorch-fid).
 * Our RT-1, Bridge, Language-Table datasets are adapted from [RT-1](https://robotics-transformer1.github.io/), [Bridge](https://rail-berkeley.github.io/bridgedata/), [open_x_embodiment
 ](https://github.com/google-deepmind/open_x_embodiment).
+
+# Discussion Group
+
+If you have any questions during the trial, running or deployment, feel free to join our WeChat group discussion! If you have any ideas or suggestions for the project, you are also welcome to join our WeChat group discussion!
+
+![image](https://github.com/bytedance/IRASim/assets/171647508/73b9ce64-31d1-4f57-9a1f-62b3ea9d45d4)
+
+
+
