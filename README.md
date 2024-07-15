@@ -16,7 +16,11 @@
 *Corresponding authors
 &dagger;Project Lead
 
-https://github.com/user-attachments/assets/e53cae7b-9bea-4774-85e1-ee16a2ef0312
+
+
+https://github.com/user-attachments/assets/916034da-f0a7-40c2-8d98-c4c67760cf41
+
+
 
 Scalable robot learning in the real world is limited by the cost and safety issues of real robots. In addition, rolling out robot trajectories in the real world can be time-consuming and labor-intensive. In this paper, we propose to learn an interactive real-robot action simulator as an alternative. We introduce a novel method, IRASim, which leverages the power of generative models to generate extremely realistic videos of a robot arm that executes a given action trajectory, starting from an initial given frame. To validate the effectiveness of our method, we create a new benchmark, IRASim Benchmark, based on three real-robot datasets and perform extensive experiments on the benchmark. Results show that IRASim outperforms all the baseline methods and is more preferable in human evaluations. We hope that IRASim can serve as an effective and scalable approach to enhance robot learning in the real world. To promote research for generative real-robot action simulators, we open-source code, benchmark, and checkpoints.
 
