@@ -19,6 +19,7 @@ import argparse
 import torch
 import json
 import numpy as np
+import time
 from copy import deepcopy
 from imageio import get_writer
 from einops import rearrange
@@ -98,7 +99,11 @@ def main(args):
     model = get_models(args)
     ema = deepcopy(model).to(device) 
     requires_grad(ema, False)
-    vae = AutoencoderKL.from_pretrained(args.vae_model_path, subfolder="vae").to(device)
+    vae = AutoencoderKL.from_pretrained("stabilityai/stable-diffusion-xl-base-1.0", subfolder="vae").to(device)
+
+    vae_parmas = sum(p.numel() for p in vae.parameters())
+    model_params = sum(p.numel() for p in model.parameters())
+    print(f"VAE params: {vae_parmas}, Model params: {model_params}")
 
     if args.evaluate_checkpoint:
         checkpoint = torch.load(args.evaluate_checkpoint, map_location=lambda storage, loc: storage)
@@ -120,20 +125,25 @@ def main(args):
     model.to(device)
     model.eval()
 
+    # print(args)
     train_dataset,val_dataset = get_dataset(args)
 
     left_scale,right_scale = 0.5,-0.5
     up_scale, down_scale = 0.5, -0.5
 
-    ann_file = val_dataset.ann_files[0]
+    # ann_file = val_dataset.ann_files[0]
 
-    with open(ann_file, "rb") as f:
-        ann = json.load(f)
-    latent_video_path = os.path.join(args.video_path,ann['latent_video_path'])
+    # with open(ann_file, "rb") as f:
+    #     ann = json.load(f)
+    # latent_video_path = os.path.join(args.video_path,ann['latent_video_path'])
+    latent_video_path = 'robotdata/opensource_robotdata/languagetable/evaluation_latent_videos/val_sample_latent_videos/000030_0_0.pt'
     with open(latent_video_path, 'rb') as f:
-        latent_video = torch.load(f)['obs']
+        latent_video = torch.load(f)
+        # print(f"{type(latent_video)=}")
+        # latent_video = latent_video['obs']
     
-    video_path = os.path.join(args.video_path, ann['video_path'])
+    # video_path = os.path.join(args.video_path, ann['video_path'])
+    video_path = 'robotdata/opensource_robotdata/languagetable/evaluation_videos/val_sample_videos/000030_0_0.mp4'
     video_reader = imageio.get_reader(video_path)
     video_tensor = []
     for frame in video_reader:

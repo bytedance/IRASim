@@ -39,6 +39,7 @@ def get_lr_scheduler(optimizer, name, **kwargs):
     
 def get_models(args):
     if 'IRASim' in args.model:
+        print(f"{args.model=}")
         return IRASim_models[args.model](
                 input_size=args.latent_size,
                 num_frames=args.num_frames,
