@@ -50,6 +50,19 @@ This table lists the download links and file sizes for the RT-1, Bridge, and Lan
 
 The complete dataset structure can be found in [dataset_structure.txt](https://github.com/bytedance/IRASim/blob/main/dataset_structure.txt).
 
+### 📢 Update (May 20, 2025)
+
+We are excited to announce that the **IRASim dataset** is now available on **Hugging Face**:  
+🔗 [https://huggingface.co/datasets/fangqi/IRASim](https://huggingface.co/datasets/fangqi/IRASim)
+
+To reconstruct the full dataset locally:
+
+1. Download all dataset parts from the Hugging Face page.
+2. Use the provided `merge.sh` script to merge the downloaded files into **multiple ZIP archives**.
+3. Extract each ZIP file separately to access the complete dataset.
+
+
+
 ## Language Table Application
 
 We recommend starting with the Language Table application. This application provides a user-friendly keyboard interface to control the robotic arm in an initial image on a 2D plane:
