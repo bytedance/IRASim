@@ -92,6 +92,8 @@ class Attention(nn.Module):
 #               Embedding Layers for Timesteps and Class Labels                 #
 #################################################################################
 
+
+# 将时间步标量转换为向量表示
 class TimestepEmbedder(nn.Module):
     """
     Embeds scalar timesteps into vector representations.
@@ -133,7 +135,7 @@ class TimestepEmbedder(nn.Module):
         t_emb = self.mlp(t_freq)
         return t_emb
 
-
+# 将类别标签标量转换为向量表示
 class LabelEmbedder(nn.Module):
     """
     Embeds class labels into vector representations. Also handles label dropout for classifier-free guidance.
@@ -146,6 +148,7 @@ class LabelEmbedder(nn.Module):
         self.dropout_prob = dropout_prob
 
     def token_drop(self, labels, force_drop_ids=None):
+        # 无分类器指导
         """
         Drops labels to enable classifier-free guidance.
         """
@@ -218,16 +221,16 @@ class IRASim(nn.Module):
     """
     def __init__(
         self,
-        input_size=32,
-        patch_size=2,
-        in_channels=4,
-        hidden_size=1152,
-        depth=28,
-        num_heads=16,
-        mlp_ratio=4.0,
-        num_frames=16,
+        input_size=32, # input size是的是啥，可能是长宽或者高，等下将会传入patch embed
+        patch_size=2, # patch_size 
+        in_channels=4, # in channels 指的是啥， 可能是指RGBA的通道？
+        hidden_size=1152, # hidden_size 指的是啥
+        depth=28, # depth 指的是啥
+        num_heads=16, # 这个应该是transformer的head
+        mlp_ratio=4.0, # 这是啥啊, 其实这个决定了Transformer Block 的MLP的HiddenDim的大小
+        num_frames=16, # 输入的视频帧数
         learn_sigma=True,
-        extras=1,
+        extras=1, # 这个extra到底是啥意思？ -> 3: frame level condition, 5: video level condition
         attention_mode='math',
         args = None
     ):
@@ -244,19 +247,19 @@ class IRASim(nn.Module):
         self.x_embedder = PatchEmbed(input_size, patch_size, in_channels, hidden_size, bias=True)
         self.t_embedder = TimestepEmbedder(hidden_size)
 
-        if self.extras == 3:
+        if self.extras == 3: # frame level
             if args.dataset == 'languagetable':
                 self.state_dim = 2
                 self.embed_arm_state = torch.nn.Linear(self.state_dim, 4*hidden_size)
                 self.embed_state = torch.nn.Linear(4* hidden_size, hidden_size)
                 self.mask_emb_fn = nn.Embedding(num_embeddings=1, embedding_dim=hidden_size)
             elif args.dataset == 'rt1': # or args.dataset == 'bridge':
-                self.state_dim = 7
+                self.state_dim = 7 
                 approx_gelu = lambda: nn.GELU(approximate="tanh")
                 self.embed_state = Mlp(in_features=self.state_dim, hidden_features = hidden_size*4, out_features=hidden_size, act_layer=approx_gelu, drop=0)
                 self.mask_emb_fn = nn.Embedding(num_embeddings=1, embedding_dim=hidden_size)
             elif args.dataset == 'bridge':
-                self.state_dim = 7
+                self.state_dim = 7 # 这个应该值得是 bridge 的state
                 approx_gelu = lambda: nn.GELU(approximate="tanh")
                 self.embed_state = Mlp(in_features=self.state_dim, hidden_features = hidden_size*4, out_features=hidden_size, act_layer=approx_gelu, drop=0)
                 self.mask_emb_fn = nn.Embedding(num_embeddings=1, embedding_dim=hidden_size)
@@ -278,6 +281,16 @@ class IRASim(nn.Module):
         # Will use fixed sin-cos embedding:
         self.pos_embed = nn.Parameter(torch.zeros(1, num_patches, hidden_size), requires_grad=False)
         self.temp_embed = nn.Parameter(torch.zeros(1, num_frames, hidden_size), requires_grad=False)
+        # 这两个都不训练的
+        """
+        对于pos_embedding
+        shape 为 (1, num_patches, hidden_size)
+        一帧图片上的每个 patch 会得到一个 hidden_size 维的向量
+        
+        对于temp_embdding
+        shape 为 (1, num_frames, hidden_size)
+        每一帧会得到一个hidden_size维的向量
+        """
         self.hidden_size =  hidden_size
 
         self.blocks = nn.ModuleList([
@@ -327,13 +340,15 @@ class IRASim(nn.Module):
     def unpatchify(self, x):
         """
         x: (N, T, patch_size**2 * C)
+        N: Batch size T: patch 的数量 patchsize**2*c: 单个patchsize的像素数
         imgs: (N, H, W, C)
+        N: Batch size H: 高， W: 宽, C: 通道数
         """
         c = self.out_channels
         p = self.x_embedder.patch_size[0]
         # h = w = int(x.shape[1] ** 0.5)
-        h, w = self.x_embedder.grid_size
-        assert h * w == x.shape[1]
+        h, w = self.x_embedder.grid_size # grid size是指patch 的 grid size
+        assert h * w == x.shape[1] # 这句话是啥意思？
 
         x = x.reshape(shape=(x.shape[0], h, w, p, p, c))
         x = torch.einsum('nhwpqc->nchpwq', x)
@@ -352,21 +367,71 @@ class IRASim(nn.Module):
         """
         Forward pass of IRASim.
         x: (N, F, C, H, W) tensor of video inputs
+        N -> Batch size
+        F -> Frames
+        C -> Channels
+        H -> Height
+        W -> Weight
         t: (N,) tensor of diffusion timesteps
+        N -> Batch Size
+        
+        如果没有猜错的话，这个Action的形状应该是
+        (Batchsize, Frames, ACtionDim)
         """
         if use_fp16:
             x = x.to(dtype=torch.float16)
-
+        print("======")
+        
+        print(f"raw x > {x.shape=}")
+        print(f"raw t > {t.shape=}")
+        print(f"raw Action > {actions.shape=}") 
+        
         batches, frames, channels, high, weight = x.shape 
+        print(f"frames > {frames}")
+        print(f"batch > {batches}")
+        print(f"channels > {channels}")
+        print(f"high > {high}")
+        print(f"weight > {weight}")
+        print(f"num_patches > {self.x_embedder.num_patches}")
+        print(f"hidden_size > {self.hidden_size}") 
         do_cfg = False
 
         x = rearrange(x, 'b f c h w -> (b f) c h w')
+        
+        print("======")
+        print(f"rearrange > {x.shape=}")
+        """
+        假设我们有一个形状为 (2, 3, 64, 32, 32) 的张量，表示 2 个样本，每个样本有 3 帧，且每帧是 64 通道，
+        32x32 像素。使用 rearrange 后，形状变为 (6, 64, 32, 32)，这意味着我们将原来
+        每个样本的 3 帧合并为 1 个维度，并且每个样本和每帧被看作独立的处理单元。这样就可以并行处理帧了，（比如说Patchify处理）
+        这个操作之后， 已经可以以frame作为索引了
+        """
+        
         x = self.x_embedder(x) 
+        print(f"pos_embed > {self.pos_embed.shape}")
+        print(f"temp_embed > {self.temp_embed.shape}")
+        print(f"after embedder > {x.shape=}")
         x = x + self.pos_embed
-        t = self.t_embedder(t, use_fp16=use_fp16)              
+        t = self.t_embedder(t, use_fp16=use_fp16) 
+        print(f"after embedder > {t.shape=}")             
         timestep_spatial = repeat(t, 'n d -> (n c) d', c=frames) 
+        print(f"timestep_spatial > {timestep_spatial.shape=}")
+        # 也就是对时间步embedding 沿 frams维度复制 frames 次。
         timestep_temp = repeat(t, 'n d -> (n c) d', c=self.pos_embed.shape[1])
-
+        print(f"timestep_temp > {timestep_temp.shape=}")
+        # 也就是对时间步embedding 沿 frams维度复制 frames 次。
+        """
+            对于 timestep_spatial
+            N = 2（两个视频样本），
+            frames = 4（每个样本4帧），
+            D = 128（时间嵌入维度）
+            那 t 的 shape 是 (2, 128)，重复后就变成了 (2 × 4, 128) = (8, 128)。
+            所以 timestep_spatial 是给 每一帧的空间编码 搭配的时间嵌入。
+            对于 timestep_temp
+            这
+            
+        """
+        
         if self.extras == 3:
             if self.args.dataset == 'languagetable':
                 arm_state = actions
@@ -375,20 +440,32 @@ class IRASim(nn.Module):
             elif self.args.dataset == 'rt1' :# or self.args.dataset == 'bridge':
                 state_embeddings = self.embed_state(actions)
             elif self.args.dataset == 'bridge':
+                # print("ok")
                 state_embeddings = self.embed_state(actions)
+                print(f"embedded action > {state_embeddings.shape}")
 
             mask_emb = self.mask_emb_fn(torch.tensor(0, device=state_embeddings.device))
             batch_front_mask_emb = repeat(mask_emb, 'd -> b 1 d', b = state_embeddings.size()[0])
+            print(f"batch_front_mask_emb > {batch_front_mask_emb.shape}")
             state_embeddings = torch.cat([
                 batch_front_mask_emb,
                 state_embeddings
-                ], dim=1)
+                ], dim=1) # 为啥啊，为啥要往前面Attach一个特殊的token，可以叫token吗？
+            print(f"state_embeddings > {state_embeddings.shape}")
+            """
+            GPT的解释:
+            这种方式通常用于一些序列或结构化数据的模型中，
+            在序列的开头（或其他位置）引入特殊的标记（如 mask，cls 等）以便模型能够正确地处理和区分这些位置。
+            """
 
             if self.training:
                 mask_emb_expanded = batch_front_mask_emb.expand_as(state_embeddings) 
                 mask = torch.rand(batches,device=state_embeddings.device) < 0.1
                 state_embeddings[mask] = mask_emb_expanded[mask]    
             state_embeddings = state_embeddings.reshape(-1,state_embeddings.size()[-1])
+            # 重新沾回去 （Batchsize， dim）的形式
+            print(f"state_embeddings mask_emb added > {state_embeddings.shape}")
+            # print(f"temporal_state_embeddings > {state_embeddings}")
         elif self.extras == 5:
             if self.args.dataset == 'languagetable':
                 arm_state = actions
@@ -403,31 +480,45 @@ class IRASim(nn.Module):
                 mask_emb = self.mask_emb_fn(torch.tensor(0,device=state_embeddings.device))
                 mask_emb_expanded = mask_emb.unsqueeze(0).expand_as(state_embeddings) 
                 state_embeddings[mask] = mask_emb_expanded[mask]    
-
+            # print(f"state_embeddings > {state_embeddings}")
+            
             spatial_state_embeddings = repeat(state_embeddings, 'n d -> (n c) d', c=frames) 
             temporal_state_embeddings = repeat(state_embeddings, 'n d -> (n c) d', c=self.pos_embed.shape[1])
 
+            
+        
+        # 到目前为止各种embeddings好像都搞完了
+        
         for i in range(0, len(self.blocks), 2):
+            ## 空间块和时间块是交替存在
+            ## 交替复制时间空间embeddings
             spatial_block, temp_block = self.blocks[i:i+2]
+            # 取Transformer的第
             if self.extras == 3:
                 c = timestep_spatial + state_embeddings
+                print(f"c = timestep_spatial + state_embeddings > {c.shape}")
             elif self.extras == 5:
                 c = timestep_spatial + spatial_state_embeddings
             else:
                 c = timestep_spatial
+            print(f"Spacial > [B*F, P, D] > {x.shape=}")
             x  = spatial_block(x, c)
 
+            
             x = rearrange(x, '(b f) t d -> (b t) f d', b=batches)
             # Add Time Embedding
             if i == 0:
                 x = x + self.temp_embed[:,0:frames]
+                print(f"x + temp_embed > {x.shape}")
 
             if self.extras == 3:
                 c = timestep_temp
+                print(f"c = timestep_temp > {c.shape}")
             elif self.extras == 5:
                 c = timestep_temp + temporal_state_embeddings
             else:
                 c = timestep_temp
+            print(f"Temporal > [B*P, F, D] > {x.shape=}")
             x = temp_block(x, c)
             x = rearrange(x, '(b t) f d -> (b f) t d', b=batches)
             
@@ -570,30 +661,36 @@ IRASim_models = {
     'IRASim-S/2':  IRASim_S_2,   'IRASim-S/4':  IRASim_S_4,   'IRASim-S/8':  IRASim_S_8,
 }
 
+
+class Config:
+    def __init__(self, config_dict):
+        for key, value in config_dict.items():
+            setattr(self, key, value)
 if __name__ == '__main__':
 
     import torch
+    import yaml
+    def load_config(config_path):
+        with open(config_path, 'r') as f:
+            config = yaml.safe_load(f)
+        return config
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
+    config_path = '/home/junzhicai/workspace/IRASim/configs/train/bridge/frame_ada.yaml'  # Your config file path
+    config_dict = load_config(config_path)
+    config = Config(config_dict)
+    img = torch.randn(3, 16, 4, 32, 32, dtype=torch.float32, device=device)
+    t = torch.tensor([1, 2, 3], dtype=torch.float32, device=device)
+    y = torch.randn((3, 15, 7), dtype=torch.float32, device=device)
 
-    img = torch.randn(3, 16, 4, 32, 32).to(device)
-    t = torch.tensor([1, 2, 3]).to(device)
-    y = torch.tensor([1, 2, 3]).to(device)
-    
-    class Args:
-        def __init__(self):
-            self.final_frame_ada = False
-            self.dataset = "bridge"  # 或其他适合的值
 
-    args = Args()
-    network = IRASim_B_2(args=args).to(device)
-    # network = IRASim_S_8().to(device)
-    from thop import profile 
-    flops, params = profile(network, inputs=(img, t))
-    print('FLOPs = ' + str(flops/1000**3) + 'G')
-    print('Params = ' + str(params/1000**2) + 'M')
+    network = IRASim_S_2(args=config, extras=3).to(device)
+    # from thop import profile 
+    # flops, params = profile(network, inputs=(img, t))
+    # print('FLOPs = ' + str(flops/1000**3) + 'G')
+    # print('Params = ' + str(params/1000**2) + 'M')
     # y_embeder = LabelEmbedder(num_classes=101, hidden_size=768, dropout_prob=0.5).to(device)
     # lora.mark_only_lora_as_trainable(network)
     # out = y_embeder(y, True)
-    # out = network(img, t, y)
-    # print(out.shape)
+    out = network(img, t, y)
+    print(out.shape)

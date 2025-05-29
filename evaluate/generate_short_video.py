@@ -68,7 +68,7 @@ def generate_sample_videos(args, val_dataloader, device, vae, ema, video_base_di
     os.makedirs(latent_video_base_dir,exist_ok=True)
     for batch in tqdm(val_dataloader,total=len(val_dataloader),desc='predicting validation videos'):
         if args.model == 'VDM':
-            x = batch['video'] 
+            x = batch['video']
         elif not args.pre_encode:
             video = batch['video'].to(device)
             b, f, _, _, _ = video.shape

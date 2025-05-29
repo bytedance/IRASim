@@ -1,4 +1,4 @@
-dataset_dir: "robotdata/opensource_robotdata" 
+dataset_dir: "opensource_robotdata" 
 project_dir: 'IRASim'
 vae_model_path: 'pretrained_models/stabilityai/stable-diffusion-xl-base-1.0'
 scheduler_path: 'pretrained_models/scheduler'

@@ -1,0 +1,9 @@
+torchrun \
+  --nproc_per_node 2 \
+  --nnodes 1 \
+  --node_rank 0 \
+  --rdzv_endpoint localhost:29500 \
+  --rdzv_id 107 \
+  --rdzv_backend c10d \
+  main.py \
+  --config configs/train/bridge/frame_ada.yaml

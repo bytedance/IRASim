@@ -170,7 +170,7 @@ def main(args):
 
     seed = args.global_seed + rank
     torch.manual_seed(seed)
-    torch.cuda.set_device(device)
+    # torch.cuda.set_device(device)
     print(f"Starting rank={rank}, local rank={local_rank}, seed={seed}, world_size={dist.get_world_size()}.")
 
 
@@ -178,8 +178,8 @@ def main(args):
 
     # Create model:
     args.latent_size = [t // 8 for t in args.video_size]
-    model = get_models(args)
-    ema = deepcopy(model).to(device)  # Create an EMA of the model for use after training
+    ema = get_models(args)
+    # ema = deepcopy(model).to(device)  # Create an EMA of the model for use after training
     requires_grad(ema, False)
     diffusion = create_mask_diffusion(timestep_respacing="",learn_sigma=args.learn_sigma)
     vae = AutoencoderKL.from_pretrained("stabilityai/stable-diffusion-xl-base-1.0", subfolder="vae").to(device)
@@ -193,7 +193,7 @@ def main(args):
             logger.info('Using ema ckpt!')
             checkpoint = checkpoint["ema"]
 
-        model_dict = model.state_dict()
+        model_dict = ema.state_dict()
         # 1. filter out unnecessary keys
         pretrained_dict = {}
         for k, v in checkpoint.items():
@@ -204,14 +204,14 @@ def main(args):
         logger.info('Successfully Load {}% original pretrained model weights '.format(len(pretrained_dict) / len(checkpoint.items()) * 100))
         # 2. overwrite entries in the existing state dict
         model_dict.update(pretrained_dict)
-        model.load_state_dict(model_dict)
+        ema.load_state_dict(model_dict)
         logger.info('Successfully load model at {}!'.format(args.evaluate_checkpoint))
 
+    ema = ema.to(device)
+    # ema = DDP(ema.to(device), device_ids=[local_rank])
 
-    model = DDP(model.to(device), device_ids=[local_rank])
-
-    logger.info(f"Model Parameters: {sum(p.numel() for p in model.parameters()):,}")
-    opt = torch.optim.AdamW(model.parameters(), lr=args.learning_rate, weight_decay=0)
+    logger.info(f"Model Parameters: {sum(p.numel() for p in ema.parameters()):,}")
+    opt = torch.optim.AdamW(ema.parameters(), lr=args.learning_rate, weight_decay=0)
 
     vae.requires_grad_(False)
 
@@ -245,12 +245,12 @@ def main(args):
 
     # Prepare models for training:
     # TODO
-    update_ema(ema, model.module, decay=0)  # Ensure EMA is initialized with synced weights
-    model.train()  # important! This enables embedding dropout for classifier-free guidance
+    # update_ema(ema, model.module, decay=0)  # Ensure EMA is initialized with synced weights
+    # model.train()  # important! This enables embedding dropout for classifier-free guidance
     ema.eval()  # EMA model should always be in eval mode
 
     if args.do_evaluate:
-        model.cpu()
+        # model.cpu()
         optimizer_to_cpu(opt)
         torch.cuda.empty_cache()
         pred_video_base_dir = f"{checkpoint_dir}/{train_steps:07d}/{args.mode}_sample_videos"
@@ -262,6 +262,7 @@ def main(args):
         torch.cuda.empty_cache()
         cleanup()
         return
+    return 
 
 
     # Variables for monitoring/logging purposes:
@@ -278,7 +279,7 @@ def main(args):
 
     # Potentially load in the weights and states from a previous save
     if args.resume_from_checkpoint:
-        checkpoint_path = os.path.join(args.resume_from_checkpoint, 'checkpoints')
+        checkpoint_path = args.resume_from_checkpoint
         dirs = os.listdir(checkpoint_path)
         dirs = [d for d in dirs if d.endswith("pt")]
         dirs = sorted(dirs, key=lambda x: int(x.split(".")[0]))
@@ -296,7 +297,6 @@ def main(args):
         first_epoch = int(train_steps // num_update_steps_per_epoch)
         resume_step = (train_steps % num_update_steps_per_epoch)*args.gradient_accumulation_steps
         # resume_sample_num = (train_steps * 32) % 2314893
-
     if args.evaluate_checkpoint:
         train_steps = int(args.evaluate_checkpoint.split("/")[-1].split('.')[0])
     accumulation_steps = args.gradient_accumulation_steps

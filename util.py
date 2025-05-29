@@ -340,7 +340,7 @@ def setup_distributed(backend="nccl", port=None):
             os.environ["RANK"] = "0"
             os.environ["WORLD_SIZE"] = "1"
             os.environ["MASTER_ADDR"] = "127.0.0.1"
-            os.environ["MASTER_PORT"] = "9003"
+            os.environ["MASTER_PORT"] = "9004"
             os.environ["LOCAL_RANK"] = "0"
             rank = int(os.environ["RANK"])
             world_size = int(os.environ["WORLD_SIZE"])
